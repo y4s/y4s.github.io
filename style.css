@@ -447,4 +447,8 @@ footer p {
     .card {
         padding: 25px; 
     }
+    /* THE FIX: Re-assert padding: 0 for project cards on mobile */
+    .project-card {
+        padding: 0;
+    }
 }
