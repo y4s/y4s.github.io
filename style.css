@@ -1,0 +1,327 @@
+/* ================= SETUP & VARIABLES ================= */
+:root {
+    /* New Color Palette based on the image */
+    --bg-page: #F5F7FA;      /* Light Pale Gray */
+    --bg-card: #FFFFFF;      /* Pure White */
+    --text-primary: #333333; /* Soft Black */
+    --text-secondary: #666666; /* Lighter Gray for supporting text */
+    --accent-blue: #4A90E2;  /* The soft blue from the resume badges */
+    --border-light: #E1E4E8; /* Subtle divider color */
+    
+    /* Typography */
+    --font-stack: 'Inter', sans-serif;
+
+    /* Geometry & Spacing */
+    --card-radius: 16px;    /* Generous rounded corners for cards */
+    --pill-radius: 50px;    /* Fully rounded buttons */
+    --section-spacing: 60px;
+    
+    /* Soft Shadow - replaces thick borders */
+    --soft-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: var(--font-stack);
+    line-height: 1.6;
+    /* Adds the outer pale gray framing seen in the image */
+    padding: 20px; 
+}
+
+/* Utility Class: The white rounded container */
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--card-radius);
+    box-shadow: var(--soft-shadow);
+    padding: 40px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-light); /* Very subtle border definition */
+}
+
+/* Utility Class: The blue "badge" title style */
+.badge {
+    display: inline-block;
+    background-color: var(--accent-blue);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--pill-radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+/* The main container to center content similar to the resume paper */
+.main-container, .header-container, footer {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+
+/* ================= HEADER ================= */
+header {
+    /* Header is now transparent, sitting on the gray background */
+    padding: 20px 0;
+    margin-bottom: 20px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+nav {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-link {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+.nav-link:hover {
+    color: var(--accent-blue);
+}
+
+/* The Rounded Blue Pill Button */
+.pill-btn {
+    background-color: var(--accent-blue);
+    color: white;
+    padding: 10px 24px;
+    border-radius: var(--pill-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.pill-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+}
+
+
+/* ================= HERO SECTION ================= */
+.hero-card {
+    text-align: left;
+    /* Mimicking the gray box inside the resume */
+    background-color: #E4E8ED; /* Slightly darker gray than background */
+    border: none;
+    box-shadow: none;
+}
+
+.hero-card h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+}
+
+.hero-subtext {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    max-width: 700px;
+    line-height: 1.7;
+}
+
+
+/* ================= SKILLS SECTION (Pills) ================= */
+.skills-section {
+    max-width: 1000px;
+    margin: var(--section-spacing) auto;
+}
+
+.skills-pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.skill-pill {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-light);
+    padding: 10px 20px;
+    border-radius: var(--pill-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+/* Optional: make a few look "active" like the green ones in the resume */
+.skill-pill:nth-child(1), .skill-pill:nth-child(2) {
+     border-color: var(--accent-blue);
+     color: var(--accent-blue);
+}
+
+
+/* ================= WORK GRID SECTION ================= */
+.work-section {
+    max-width: 1000px;
+    margin: var(--section-spacing) auto;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+}
+
+/* Project Card Styling */
+.project-card {
+    padding: 0; /* Remove padding so image hits edge */
+    overflow: hidden; /* Ensure image obeys rounded corners */
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px); /* Subtle lift on hover */
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    background-color: #f0f0f0;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* No grayscale filter in this theme */
+}
+
+/* Soft Blue Overlay on Hover */
+.hover-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(74, 144, 226, 0.9); /* Accent blue with opacity */
+    opacity: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.hover-overlay span {
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.card-image-link:hover .hover-overlay {
+    opacity: 1;
+}
+
+/* Card Data */
+.card-data {
+    padding: 25px;
+}
+
+.card-data h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.project-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.data-tags {
+    display: flex;
+    gap: 10px;
+}
+
+.mini-tag {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    background-color: #EDF5FF; /* Very pale blue background */
+    padding: 5px 12px;
+    border-radius: var(--pill-radius);
+}
+
+
+/* ================= FOOTER ================= */
+footer.card {
+    text-align: center;
+    padding: 60px 20px;
+    margin-top: var(--section-spacing);
+}
+
+footer h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+footer p {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.main-cta {
+    display: inline-block;
+    font-size: 1.1rem;
+    padding: 15px 40px;
+    margin-bottom: 40px;
+}
+
+.footer-links {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.footer-links a:hover {
+    color: var(--accent-blue);
+}
+
+.copyright {
+    font-size: 0.9rem;
+    color: #999;
+}
+
+
+/* ================= RESPONSIVE TWEAKS ================= */
+@media (max-width: 768px) {
+    body {
+        padding: 10px; /* Less outer padding on mobile */
+    }
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    .card {
+        padding: 25px; /* Smaller internal padding on mobile */
+    }
+}
