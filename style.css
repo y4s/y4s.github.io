@@ -1,23 +1,41 @@
 /* ================= SETUP & VARIABLES ================= */
 :root {
-    /* Color Palette */
+    /* LIGHT MODE (Default) Color Palette */
     --bg-page: #F5F7FA;      /* Light Pale Gray */
     --bg-card: #FFFFFF;      /* Pure White */
+    --bg-hero: #E4E8ED;      /* Slightly darker gray for hero section */
+    --bg-pill: rgba(255,255,255,0.5); /* Transparent white for inner skills */
+    
     --text-primary: #333333; /* Soft Black */
     --text-secondary: #666666; /* Lighter Gray for supporting text */
     --accent-blue: #4A90E2;  /* The soft blue accent */
     --border-light: #E1E4E8; /* Subtle divider color */
-    
+    --shadow-color: rgba(0, 0, 0, 0.05);
+
     /* Typography */
     --font-stack: 'Inter', sans-serif;
 
     /* Geometry & Spacing */
-    --card-radius: 16px;    /* Generous rounded corners for cards */
-    --pill-radius: 50px;    /* Fully rounded buttons */
+    --card-radius: 16px;
+    --pill-radius: 50px;
     --section-spacing: 60px;
     
     /* Soft Shadow */
-    --soft-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+    --soft-shadow: 0px 4px 20px var(--shadow-color);
+}
+
+/* DARK MODE OVERRIDES */
+body.dark-mode {
+    --bg-page: #121212;      /* Deep dark background */
+    --bg-card: #1E1E1E;      /* Dark gray cards */
+    --bg-hero: #2A2A2A;      /* Slightly lighter dark for hero */
+    --bg-pill: rgba(255,255,255,0.08); /* Transparent white for dark mode */
+
+    --text-primary: #E0E0E0; /* Off-white text */
+    --text-secondary: #A0A0A0; /* Medium gray text */
+    /* accent-blue stays the same */
+    --border-light: #333333; /* Darker borders */
+    --shadow-color: rgba(0, 0, 0, 0.5); /* Stronger, darker shadow */
 }
 
 /* Reset */
@@ -33,23 +51,24 @@ html {
 
 body {
     margin: 0;
-    /* Main Cursor Path */
+    /* Main Cursor Path (Used in both modes now) */
     cursor: url('images/23165.png') 0 0, auto;
     background-color: var(--bg-page);
     color: var(--text-primary);
     font-family: var(--font-stack);
     line-height: 1.6;
-    /* Adds the outer pale gray framing */
     padding: 20px; 
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 
 /* ================= HOVER CURSOR SETTINGS ================= */
-/* Targets links and buttons for the secondary cursor */
+/* Light Mode Hover Cursor (Used in both modes now) */
 a:hover, 
 .pill-btn:hover, 
 .card-image-link:hover,
-button.category-btn:hover {
+button.category-btn:hover,
+#theme-toggle:hover {
     cursor: url('images/23176.png') 0 0, pointer;
 }
 
@@ -62,6 +81,7 @@ button.category-btn:hover {
     padding: 40px;
     margin-bottom: 30px;
     border: 1px solid var(--border-light);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .badge {
@@ -87,7 +107,11 @@ a {
     max-width: 1000px;
     margin: 0 auto;
 }
-
+/* General Icon sizing */
+.icon {
+    width: 20px;
+    height: 20px;
+}
 
 /* ================= HEADER ================= */
 header {
@@ -122,6 +146,30 @@ nav {
     color: var(--accent-blue);
 }
 
+/* Theme Toggle Button */
+#theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+#theme-toggle:hover {
+    color: var(--accent-blue);
+    background-color: var(--bg-hero);
+}
+/* Utility to hide one icon at a time */
+#theme-toggle .hidden {
+    display: none;
+}
+
+
 .pill-btn {
     background-color: var(--accent-blue);
     color: white;
@@ -141,7 +189,8 @@ nav {
 /* ================= HERO SECTION ================= */
 .hero-card {
     text-align: left;
-    background-color: #E4E8ED; 
+    /* Updated to use the variable for theme switching */
+    background-color: var(--bg-hero); 
     border: none;
     box-shadow: none;
 }
@@ -176,7 +225,7 @@ nav {
     padding-bottom: 10px; /* Little breathing room at bottom */
 }
 
-/* THE MAGIC TRICK: display: contents */
+/* display: contents trick */
 .skill-category-group {
     display: contents;
 }
@@ -190,7 +239,6 @@ button.category-btn {
     background-color: var(--bg-card);
     border: 1px solid var(--accent-blue);
     color: var(--text-primary);
-    /* Adjusted padding to accommodate the icon */
     padding: 8px 16px 8px 20px;
     border-radius: var(--pill-radius);
     font-weight: 600;
@@ -198,7 +246,6 @@ button.category-btn {
     cursor: pointer;
     display: inline-flex; 
     align-items: center;
-    /* Gap between text and icon */
     gap: 8px;
     white-space: nowrap;
     z-index: 2;
@@ -206,7 +253,7 @@ button.category-btn {
 }
 
 button.category-btn:hover {
-   background-color: #EDF5FF; 
+   background-color: var(--bg-hero); 
 }
 
 /* Active state (clicked) */
@@ -215,21 +262,13 @@ button.category-btn.active {
     color: white;
 }
 
-/* NEW SVG ICON STYLES 
-   Replaces the old ::after rules
-*/
 .category-icon {
-    /* Set initial color to match the blue border/text */
     color: var(--accent-blue);
-    /* Smooth transition for rotation and color change */
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
-/* When the parent button is active, target the icon inside it */
 button.category-btn.active .category-icon {
-    /* Rotate 135deg for a snappy spin to 'X' */
     transform: rotate(135deg);
-    /* Change icon color to white to match active button text */
     color: white;
 }
 
@@ -252,12 +291,14 @@ button.category-btn.active .category-icon {
     font-weight: 600;
     font-size: 0.85rem;
     color: var(--text-primary);
-    background-color: rgba(255,255,255,0.5);
+    /* Updated to use the variable for theme switching */
+    background-color: var(--bg-pill);
     padding: 5px 12px;
     border-radius: var(--pill-radius);
     border: 1px solid var(--border-light); 
     display: inline-flex;
     white-space: nowrap;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 
@@ -287,7 +328,7 @@ button.category-btn.active .category-icon {
     position: relative;
     width: 100%;
     height: 250px;
-    background-color: #f0f0f0;
+    background-color: var(--bg-hero);
 }
 
 .image-container img {
@@ -344,6 +385,11 @@ button.category-btn.active .category-icon {
     background-color: #EDF5FF; 
     padding: 5px 12px;
     border-radius: var(--pill-radius);
+}
+/* Mini tags need a dark mode adjust too */
+body.dark-mode .mini-tag {
+    background-color: rgba(74, 144, 226, 0.2);
+    color: #64B5F6; /* Slightly lighter blue for contrast against dark */
 }
 
 
