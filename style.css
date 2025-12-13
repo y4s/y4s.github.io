@@ -1,11 +1,11 @@
 /* ================= SETUP & VARIABLES ================= */
 :root {
-    /* New Color Palette based on the image */
+    /* Color Palette */
     --bg-page: #F5F7FA;      /* Light Pale Gray */
     --bg-card: #FFFFFF;      /* Pure White */
     --text-primary: #333333; /* Soft Black */
     --text-secondary: #666666; /* Lighter Gray for supporting text */
-    --accent-blue: #4A90E2;  /* The soft blue from the resume badges */
+    --accent-blue: #4A90E2;  /* The soft blue accent */
     --border-light: #E1E4E8; /* Subtle divider color */
     
     /* Typography */
@@ -16,7 +16,7 @@
     --pill-radius: 50px;    /* Fully rounded buttons */
     --section-spacing: 60px;
     
-    /* Soft Shadow - replaces thick borders */
+    /* Soft Shadow */
     --soft-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
 }
 
@@ -32,25 +32,38 @@ html {
 }
 
 body {
+    margin: 0;
+    /* Main Cursor Path */
+    cursor: url('images/23165.png') 0 0, auto;
     background-color: var(--bg-page);
     color: var(--text-primary);
     font-family: var(--font-stack);
     line-height: 1.6;
-    /* Adds the outer pale gray framing seen in the image */
+    /* Adds the outer pale gray framing */
     padding: 20px; 
 }
 
-/* Utility Class: The white rounded container */
+
+/* ================= HOVER CURSOR SETTINGS ================= */
+/* Targets links and buttons for the secondary cursor */
+a:hover, 
+.pill-btn:hover, 
+.card-image-link:hover,
+button.category-btn:hover {
+    cursor: url('images/23176.png') 0 0, pointer;
+}
+
+
+/* ================= UTILITY CLASSES ================= */
 .card {
     background-color: var(--bg-card);
     border-radius: var(--card-radius);
     box-shadow: var(--soft-shadow);
     padding: 40px;
     margin-bottom: 30px;
-    border: 1px solid var(--border-light); /* Very subtle border definition */
+    border: 1px solid var(--border-light);
 }
 
-/* Utility Class: The blue "badge" title style */
 .badge {
     display: inline-block;
     background-color: var(--accent-blue);
@@ -70,7 +83,6 @@ a {
     transition: all 0.2s ease;
 }
 
-/* The main container to center content similar to the resume paper */
 .main-container, .header-container, footer {
     max-width: 1000px;
     margin: 0 auto;
@@ -79,7 +91,6 @@ a {
 
 /* ================= HEADER ================= */
 header {
-    /* Header is now transparent, sitting on the gray background */
     padding: 20px 0;
     margin-bottom: 20px;
 }
@@ -111,7 +122,6 @@ nav {
     color: var(--accent-blue);
 }
 
-/* The Rounded Blue Pill Button */
 .pill-btn {
     background-color: var(--accent-blue);
     color: white;
@@ -119,6 +129,8 @@ nav {
     border-radius: var(--pill-radius);
     font-weight: 600;
     font-size: 0.9rem;
+    display: inline-block;
+    border: none;
 }
 .pill-btn:hover {
     transform: translateY(-2px);
@@ -129,8 +141,7 @@ nav {
 /* ================= HERO SECTION ================= */
 .hero-card {
     text-align: left;
-    /* Mimicking the gray box inside the resume */
-    background-color: #E4E8ED; /* Slightly darker gray than background */
+    background-color: #E4E8ED; 
     border: none;
     box-shadow: none;
 }
@@ -150,32 +161,103 @@ nav {
 }
 
 
-/* ================= SKILLS SECTION (Pills) ================= */
+/* ================= SKILLS SECTION (Continuous Flow) ================= */
 .skills-section {
     max-width: 1000px;
     margin: var(--section-spacing) auto;
 }
 
-.skills-pills-container {
+/* The wrapper for everything. Controls the main flow. */
+.skills-horizontal-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: wrap; /* Allow everything inside to wrap like text */
+    gap: 10px; /* Uniform space between buttons and skills */
+    align-items: center; /* Center them vertically */
+    padding-bottom: 10px; /* Little breathing room at bottom */
 }
 
-.skill-pill {
+/* THE MAGIC TRICK: display: contents */
+.skill-category-group {
+    display: contents;
+}
+
+
+/* Styling the trigger buttons */
+button.category-btn {
+    font-family: var(--font-stack); 
+    text-align: left;
+    transition: all 0.2s ease;
     background-color: var(--bg-card);
-    border: 1px solid var(--border-light);
-    padding: 10px 20px;
+    border: 1px solid var(--accent-blue);
+    color: var(--text-primary);
+    /* Adjusted padding to accommodate the icon */
+    padding: 8px 16px 8px 20px;
     border-radius: var(--pill-radius);
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--text-primary);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    cursor: pointer;
+    display: inline-flex; 
+    align-items: center;
+    /* Gap between text and icon */
+    gap: 8px;
+    white-space: nowrap;
+    z-index: 2;
+    margin-right: 5px;
 }
-/* Optional: make a few look "active" like the green ones in the resume */
-.skill-pill:nth-child(1), .skill-pill:nth-child(2) {
-     border-color: var(--accent-blue);
-     color: var(--accent-blue);
+
+button.category-btn:hover {
+   background-color: #EDF5FF; 
+}
+
+/* Active state (clicked) */
+button.category-btn.active {
+    background-color: var(--accent-blue);
+    color: white;
+}
+
+/* NEW SVG ICON STYLES 
+   Replaces the old ::after rules
+*/
+.category-icon {
+    /* Set initial color to match the blue border/text */
+    color: var(--accent-blue);
+    /* Smooth transition for rotation and color change */
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* When the parent button is active, target the icon inside it */
+button.category-btn.active .category-icon {
+    /* Rotate 135deg for a snappy spin to 'X' */
+    transform: rotate(135deg);
+    /* Change icon color to white to match active button text */
+    color: white;
+}
+
+
+/* THE HIDE/SHOW LOGIC */
+
+/* State 1: VISIBLE Container */
+.skills-pills-container {
+    display: contents;
+}
+
+/* State 2: HIDDEN Container */
+.skills-pills-container.hidden {
+    display: none;
+}
+
+
+/* The individual inner skill items */
+.inner-skill {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    background-color: rgba(255,255,255,0.5);
+    padding: 5px 12px;
+    border-radius: var(--pill-radius);
+    border: 1px solid var(--border-light); 
+    display: inline-flex;
+    white-space: nowrap;
 }
 
 
@@ -191,15 +273,14 @@ nav {
     gap: 30px;
 }
 
-/* Project Card Styling */
 .project-card {
-    padding: 0; /* Remove padding so image hits edge */
-    overflow: hidden; /* Ensure image obeys rounded corners */
+    padding: 0; 
+    overflow: hidden; 
     transition: transform 0.3s ease;
 }
 
 .project-card:hover {
-    transform: translateY(-5px); /* Subtle lift on hover */
+    transform: translateY(-5px); 
 }
 
 .image-container {
@@ -213,14 +294,12 @@ nav {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* No grayscale filter in this theme */
 }
 
-/* Soft Blue Overlay on Hover */
 .hover-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(74, 144, 226, 0.9); /* Accent blue with opacity */
+    background-color: rgba(74, 144, 226, 0.9); 
     opacity: 0; 
     display: flex;
     justify-content: center;
@@ -238,7 +317,6 @@ nav {
     opacity: 1;
 }
 
-/* Card Data */
 .card-data {
     padding: 25px;
 }
@@ -263,7 +341,7 @@ nav {
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--accent-blue);
-    background-color: #EDF5FF; /* Very pale blue background */
+    background-color: #EDF5FF; 
     padding: 5px 12px;
     border-radius: var(--pill-radius);
 }
@@ -287,7 +365,6 @@ footer p {
 }
 
 .main-cta {
-    display: inline-block;
     font-size: 1.1rem;
     padding: 15px 40px;
     margin-bottom: 40px;
@@ -312,7 +389,7 @@ footer p {
 /* ================= RESPONSIVE TWEAKS ================= */
 @media (max-width: 768px) {
     body {
-        padding: 10px; /* Less outer padding on mobile */
+        padding: 10px; 
     }
     .header-container {
         flex-direction: column;
@@ -322,6 +399,6 @@ footer p {
         grid-template-columns: 1fr;
     }
     .card {
-        padding: 25px; /* Smaller internal padding on mobile */
+        padding: 25px; 
     }
 }
