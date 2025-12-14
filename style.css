@@ -131,7 +131,7 @@ header {
 
 nav {
     display: flex;
-    gap: 15px; /* Reduced slightly to fit extra button */
+    gap: 15px; 
     align-items: center;
 }
 
@@ -145,7 +145,6 @@ nav {
 }
 
 /* --- TOGGLE BUTTONS (Theme & Sound) --- */
-/* We group these so they look identical */
 #theme-toggle, #sound-toggle {
     background: none;
     border: none;
@@ -155,7 +154,6 @@ nav {
     border-radius: 50%;
     transition: color 0.3s ease, background-color 0.3s ease;
     
-    /* Grid layout allows stacking icons on top of each other */
     display: grid;
     place-items: center;
     grid-template-areas: "icon-stack";
@@ -180,7 +178,6 @@ body.dark-mode .sun-icon { opacity: 0; transform: rotate(90deg); }
 body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg); }
 
 /* --- Sound Icon Animation --- */
-/* Simple fade/scale scale for sound */
 .sound-on-icon { opacity: 1; transform: scale(1); }
 .sound-off-icon { opacity: 0; transform: scale(0.5); }
 
@@ -220,7 +217,6 @@ body.muted .sound-off-icon { opacity: 1; transform: scale(1); }
     color: var(--text-primary);
 }
 
-/* Updated max-width to 100% per your request */
 .hero-subtext {
     font-size: 1.1rem;
     color: var(--text-primary);
@@ -304,7 +300,6 @@ button.category-btn.active .category-icon {
     display: inline-flex;
     white-space: nowrap;
     
-    /* PROPERTIES TO ANIMATE (OPEN STATE) */
     max-width: 300px; 
     padding: 5px 12px;
     opacity: 1;
@@ -357,10 +352,15 @@ button.category-btn.active .category-icon {
     gap: 30px;
 }
 
-.project-card {
+/* --- THE FIX IS HERE --- */
+/* Using .project-card.card makes this rule strong enough to override the default card margin */
+.project-card.card {
     padding: 0; 
     overflow: hidden; 
     transition: transform 0.3s ease;
+    
+    /* Remove the default card margin so the grid gap handles spacing */
+    margin-bottom: 0; 
 }
 
 .project-card:hover {
@@ -488,8 +488,5 @@ footer p {
     }
     .card {
         padding: 25px; 
-    }
-    .project-card {
-        padding: 0;
     }
 }
