@@ -146,27 +146,56 @@ nav {
     color: var(--accent-blue);
 }
 
-/* Theme Toggle Button */
+/* --- THEME TOGGLE BUTTON & ANIMATION --- */
 #theme-toggle {
     background: none;
     border: none;
     cursor: pointer;
     color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
+    padding: 8px; /* Slightly larger click area */
     border-radius: 50%;
     transition: color 0.3s ease, background-color 0.3s ease;
+    
+    /* Grid layout allows stacking icons on top of each other */
+    display: grid;
+    place-items: center;
+    grid-template-areas: "icon-stack";
+    overflow: hidden; /* Keeps the spinning neat */
 }
 
 #theme-toggle:hover {
     color: var(--accent-blue);
     background-color: var(--bg-hero);
 }
-/* Utility to hide one icon at a time */
-#theme-toggle .hidden {
-    display: none;
+
+/* Target both icons inside the button */
+#theme-toggle .icon {
+    grid-area: icon-stack; /* Makes them occupy the exact same space */
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease; /* Bouncy spin */
+}
+
+/* STATE 1: LIGHT MODE (Default) */
+/* Sun is visible and upright */
+.sun-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+/* Moon is hidden and rotated to the left (-90deg) waiting to spin in */
+.moon-icon {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+/* STATE 2: DARK MODE (Active) */
+/* When body has dark-mode, Sun rotates right (90deg) and vanishes */
+body.dark-mode .sun-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+}
+/* Moon rotates to center (0deg) and appears */
+body.dark-mode .moon-icon {
+    opacity: 1;
+    transform: rotate(0deg);
 }
 
 
@@ -447,7 +476,6 @@ footer p {
     .card {
         padding: 25px; 
     }
-    /* THE FIX: Re-assert padding: 0 for project cards on mobile */
     .project-card {
         padding: 0;
     }
