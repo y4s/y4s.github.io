@@ -236,20 +236,69 @@
 
 
     <script>
-        // --- SOUND EFFECT SETUP ---
+        // --- AUDIO SETUP ---
+        // 1. General Click Sound
         const clickSound = new Audio('audios/click.mp3');
         clickSound.volume = 0.4; 
         clickSound.preload = 'auto';
 
+        // 2. NEW: Mode Switch Sound
+        const modeSound = new Audio('audios/mode.mp3');
+        modeSound.volume = 0.4;
+        modeSound.preload = 'auto';
+
         let isMuted = localStorage.getItem('isMuted') === 'true';
 
-        const soundToggleBtn = document.getElementById('sound-toggle');
+        // --- DOM ELEMENTS ---
         const body = document.body;
+        const soundToggleBtn = document.getElementById('sound-toggle');
+        const soundOnIcon = document.querySelector('.sound-on-icon');
+        const soundOffIcon = document.querySelector('.sound-off-icon');
+        
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navElements = document.querySelector('.nav-elements');
 
+
+        // --- HELPER: UPDATE ICONS ---
+        // Keeps icons in sync using JavaScript class toggling
+        function updateIcons() {
+            // Sound
+            if (isMuted) {
+                soundOnIcon.classList.add('hidden');
+                soundOffIcon.classList.remove('hidden');
+            } else {
+                soundOnIcon.classList.remove('hidden');
+                soundOffIcon.classList.add('hidden');
+            }
+            // Theme
+            if (body.classList.contains('dark-mode')) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        // --- INITIALIZATION ---
         if (isMuted) {
             body.classList.add('muted');
         }
+        
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+        }
+        
+        // Ensure icons are correct on load
+        updateIcons();
 
+
+        // --- AUDIO PLAY FUNCTIONS ---
         function playClick() {
             if (!isMuted) {
                 clickSound.currentTime = 0.02; 
@@ -259,14 +308,24 @@
             }
         }
 
-        // --- MOBILE MENU LOGIC (NEW) ---
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navElements = document.querySelector('.nav-elements');
+        // Specific function for Mode Toggle
+        function playModeSound() {
+            if (!isMuted) {
+                modeSound.currentTime = 0; 
+                modeSound.play().catch(e => {
+                    console.log("Audio play failed: ", e); 
+                });
+            }
+        }
 
+
+        // --- EVENT LISTENERS ---
+
+        // Mobile Menu
         mobileMenuBtn.addEventListener('click', () => {
             playClick();
-            mobileMenuBtn.classList.toggle('active'); // Animate icon
-            navElements.classList.toggle('active');   // Show dropdown
+            mobileMenuBtn.classList.toggle('active');
+            navElements.classList.toggle('active'); 
         });
 
         // Close menu when clicking outside
@@ -277,8 +336,7 @@
             }
         });
 
-
-        // --- SOUND TOGGLE LOGIC ---
+        // Sound Toggle
         soundToggleBtn.addEventListener('click', () => {
             isMuted = !isMuted; 
             
@@ -289,10 +347,11 @@
                 playClick(); 
             }
             localStorage.setItem('isMuted', isMuted);
+            updateIcons();
         });
 
 
-        // --- SKILLS TOGGLE LOGIC ---
+        // SKILLS TOGGLE
         const categoryButtons = document.querySelectorAll('.category-btn');
         categoryButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -304,38 +363,26 @@
         });
 
 
-        // --- DARK MODE TOGGLE LOGIC ---
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const sunIcon = document.querySelector('.sun-icon');
-        const moonIcon = document.querySelector('.moon-icon');
-
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'dark') {
-            body.classList.add('dark-mode');
-            sunIcon.classList.remove('hidden');
-            moonIcon.classList.add('hidden');
-        }
-
+        // DARK MODE TOGGLE (UPDATED)
         themeToggleBtn.addEventListener('click', () => {
-            playClick();
-            body.classList.toggle('dark-mode');
+            // Play the unique mode sound
+            playModeSound();
             
-            sunIcon.classList.toggle('hidden');
-            moonIcon.classList.toggle('hidden');
+            body.classList.toggle('dark-mode');
             
             let theme = 'light';
             if (body.classList.contains('dark-mode')) {
                 theme = 'dark';
             }
             localStorage.setItem('theme', theme);
+            updateIcons();
         });
 
 
-        // --- GENERAL LINKS LOGIC ---
+        // GENERAL LINKS
         const allLinks = document.querySelectorAll('a');
         allLinks.forEach(link => {
             link.addEventListener('click', () => {
-                // If the link is inside the mobile menu, close the menu when clicked
                 if (link.closest('.nav-elements')) {
                     mobileMenuBtn.classList.remove('active');
                     navElements.classList.remove('active');
