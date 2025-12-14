@@ -236,20 +236,30 @@
 
 
     <script>
+        // --- 1. FORCE SCROLL TO TOP ON REFRESH ---
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual'; // Disable browser auto-scroll
+        }
+        window.addEventListener('load', function() {
+            window.scrollTo(0, 0); // Force top
+            // Clean URL (remove #work from address bar)
+            if (window.location.hash) {
+                history.replaceState(null, null, window.location.pathname);
+            }
+        });
+
+
         // --- AUDIO SETUP ---
-        // 1. General Click Sound
         const clickSound = new Audio('audios/click.mp3');
         clickSound.volume = 0.4; 
         clickSound.preload = 'auto';
 
-        // 2. Mode Switch Sound
         const modeSound = new Audio('audios/mode.mp3');
         modeSound.volume = 0.4;
         modeSound.preload = 'auto';
 
-        // 3. Hover Sound (NEW)
         const hoverSound = new Audio('audios/hover.mp3');
-        hoverSound.volume = 0.2; // Slightly quieter for subtlety
+        hoverSound.volume = 0.2;
         hoverSound.preload = 'auto';
 
         let isMuted = localStorage.getItem('isMuted') === 'true';
@@ -303,7 +313,6 @@
 
         // --- AUDIO PLAY FUNCTIONS ---
         
-        // 1. Click
         function playClick() {
             if (!isMuted) {
                 clickSound.currentTime = 0.02; 
@@ -311,7 +320,6 @@
             }
         }
 
-        // 2. Mode Switch
         function playModeSound() {
             if (!isMuted) {
                 modeSound.currentTime = 0; 
@@ -319,15 +327,11 @@
             }
         }
 
-        // 3. Hover (With Desktop Check)
         function playHoverSound() {
-            // Only play if not muted AND user has a hover-capable device (mouse/trackpad)
-            // This effectively disables it for touch screens / mobile
+            // Only play if not muted AND user is on desktop (has hover capability)
             if (!isMuted && window.matchMedia('(hover: hover)').matches) {
-                hoverSound.currentTime = 0; // Reset to start for rapid hovers
-                hoverSound.play().catch(e => {
-                    // Ignored (browsers block auto-play sometimes, this prevents errors)
-                });
+                hoverSound.currentTime = 0; 
+                hoverSound.play().catch(e => {});
             }
         }
 
@@ -352,6 +356,7 @@
         // Sound Toggle
         soundToggleBtn.addEventListener('click', () => {
             isMuted = !isMuted; 
+            
             if (isMuted) {
                 body.classList.add('muted');
             } else {
@@ -385,7 +390,7 @@
             updateIcons();
         });
 
-        // General Links (Click Sound)
+        // General Links
         const allLinks = document.querySelectorAll('a');
         allLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -398,9 +403,8 @@
         });
 
         // --- GLOBAL HOVER SOUND SETUP ---
-        // Select all interactive elements: Links and Buttons
+        // Attaches sound to all Links and Buttons
         const interactiveElements = document.querySelectorAll('a, button');
-        
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 playHoverSound();
