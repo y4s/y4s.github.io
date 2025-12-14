@@ -33,7 +33,6 @@ body.dark-mode {
 
     --text-primary: #E0E0E0; /* Off-white text */
     --text-secondary: #A0A0A0; /* Medium gray text */
-    /* accent-blue stays the same */
     --border-light: #333333; /* Darker borders */
     --shadow-color: rgba(0, 0, 0, 0.5); /* Stronger, darker shadow */
 }
@@ -51,7 +50,7 @@ html {
 
 body {
     margin: 0;
-    /* Main Cursor Path (Used in both modes now) */
+    /* Main Cursor Path */
     cursor: url('images/23165.png') 0 0, auto;
     background-color: var(--bg-page);
     color: var(--text-primary);
@@ -61,9 +60,7 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
 /* ================= HOVER CURSOR SETTINGS ================= */
-/* Light Mode Hover Cursor (Used in both modes now) */
 a:hover, 
 .pill-btn:hover, 
 .card-image-link:hover,
@@ -107,7 +104,6 @@ a {
     max-width: 1000px;
     margin: 0 auto;
 }
-/* General Icon sizing */
 .icon {
     width: 20px;
     height: 20px;
@@ -152,15 +148,13 @@ nav {
     border: none;
     cursor: pointer;
     color: var(--text-primary);
-    padding: 8px; /* Slightly larger click area */
+    padding: 8px;
     border-radius: 50%;
     transition: color 0.3s ease, background-color 0.3s ease;
-    
-    /* Grid layout allows stacking icons on top of each other */
     display: grid;
     place-items: center;
     grid-template-areas: "icon-stack";
-    overflow: hidden; /* Keeps the spinning neat */
+    overflow: hidden; 
 }
 
 #theme-toggle:hover {
@@ -168,35 +162,17 @@ nav {
     background-color: var(--bg-hero);
 }
 
-/* Target both icons inside the button */
 #theme-toggle .icon {
-    grid-area: icon-stack; /* Makes them occupy the exact same space */
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease; /* Bouncy spin */
+    grid-area: icon-stack;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
 }
 
-/* STATE 1: LIGHT MODE (Default) */
-/* Sun is visible and upright */
-.sun-icon {
-    opacity: 1;
-    transform: rotate(0deg);
-}
-/* Moon is hidden and rotated to the left (-90deg) waiting to spin in */
-.moon-icon {
-    opacity: 0;
-    transform: rotate(-90deg);
-}
+/* Light/Dark Icon States */
+.sun-icon { opacity: 1; transform: rotate(0deg); }
+.moon-icon { opacity: 0; transform: rotate(-90deg); }
 
-/* STATE 2: DARK MODE (Active) */
-/* When body has dark-mode, Sun rotates right (90deg) and vanishes */
-body.dark-mode .sun-icon {
-    opacity: 0;
-    transform: rotate(90deg);
-}
-/* Moon rotates to center (0deg) and appears */
-body.dark-mode .moon-icon {
-    opacity: 1;
-    transform: rotate(0deg);
-}
+body.dark-mode .sun-icon { opacity: 0; transform: rotate(90deg); }
+body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg); }
 
 
 .pill-btn {
@@ -218,7 +194,6 @@ body.dark-mode .moon-icon {
 /* ================= HERO SECTION ================= */
 .hero-card {
     text-align: left;
-    /* Updated to use the variable for theme switching */
     background-color: var(--bg-hero); 
     border: none;
     box-shadow: none;
@@ -234,33 +209,34 @@ body.dark-mode .moon-icon {
 .hero-subtext {
     font-size: 1.1rem;
     color: var(--text-primary);
-    max-width: 700px;
+    
+    /* CHANGED: This was 700px. Setting it to 100% removes the empty space on the right. */
+    max-width: 100%; 
+    
     line-height: 1.7;
 }
 
-
-/* ================= SKILLS SECTION (Continuous Flow) ================= */
+/* ================= SKILLS SECTION ================= */
 .skills-section {
     max-width: 1000px;
     margin: var(--section-spacing) auto;
 }
 
-/* The wrapper for everything. Controls the main flow. */
 .skills-horizontal-wrapper {
     display: flex;
-    flex-wrap: wrap; /* Allow everything inside to wrap like text */
-    gap: 10px; /* Uniform space between buttons and skills */
-    align-items: center; /* Center them vertically */
-    padding-bottom: 10px; /* Little breathing room at bottom */
+    flex-wrap: wrap; 
+    /* CHANGED: Removed gap to fix the ghost spacing issue. 
+       We will use margins on the children instead. */
+    gap: 0; 
+    align-items: center; 
+    padding-bottom: 10px; 
 }
 
-/* display: contents trick */
 .skill-category-group {
     display: contents;
 }
 
-
-/* Styling the trigger buttons */
+/* Category Button Styling */
 button.category-btn {
     font-family: var(--font-stack); 
     text-align: left;
@@ -278,14 +254,13 @@ button.category-btn {
     gap: 8px;
     white-space: nowrap;
     z-index: 2;
-    margin-right: 5px;
+    /* CHANGED: Margins replace the gap. */
+    margin-right: 10px;
+    margin-bottom: 12px;
 }
 
-button.category-btn:hover {
-   background-color: var(--bg-hero); 
-}
+button.category-btn:hover { background-color: var(--bg-hero); }
 
-/* Active state (clicked) */
 button.category-btn.active {
     background-color: var(--accent-blue);
     color: white;
@@ -302,32 +277,70 @@ button.category-btn.active .category-icon {
 }
 
 
-/* THE HIDE/SHOW LOGIC */
+/* --- THE NEW SMOOTH SLIDE ANIMATION LOGIC --- */
 
-/* State 1: VISIBLE Container */
 .skills-pills-container {
     display: contents;
 }
 
-/* State 2: HIDDEN Container */
-.skills-pills-container.hidden {
-    display: none;
-}
-
-
-/* The individual inner skill items */
+/* The Inner Skill Item (This handles the animation) */
 .inner-skill {
+    /* Base styles */
     font-weight: 600;
     font-size: 0.85rem;
     color: var(--text-primary);
-    /* Updated to use the variable for theme switching */
     background-color: var(--bg-pill);
-    padding: 5px 12px;
     border-radius: var(--pill-radius);
     border: 1px solid var(--border-light); 
     display: inline-flex;
     white-space: nowrap;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    
+    /* PROPERTIES TO ANIMATE (OPEN STATE) */
+    max-width: 300px; 
+    padding: 5px 12px;
+    opacity: 1;
+    transform: translateX(0);
+    
+    /* CHANGED: Added margin here so we can animate it to 0 */
+    margin-right: 8px;
+    margin-bottom: 12px;
+    
+    /* The Magic Transition: Handles both opening and closing.
+       CHANGED: Removed cubic-bezier, switched to standard 'ease' for a cleaner look. */
+    transition: 
+        max-width 0.35s ease, 
+        padding 0.35s ease, 
+        margin 0.35s ease, /* Animating margin kills the ghost space */
+        opacity 0.35s ease, 
+        transform 0.35s ease,
+        border-width 0.2s ease;
+}
+
+/* The Hidden State (Squash it to zero) */
+.skills-pills-container.hidden .inner-skill {
+    max-width: 0;
+    padding: 0;
+    border-width: 0;
+    opacity: 0;
+    /* Slide to the LEFT (-15px) when hiding */
+    transform: translateX(-15px);
+    overflow: hidden; 
+    
+    /* CHANGED: Collapse margins to 0. This fixes the random spaces! */
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+/* Staggered Delays (OPENING ONLY) */
+/* This makes them slide in one by one */
+.skills-pills-container:not(.hidden) .inner-skill:nth-child(2n) {
+    transition-delay: 0.03s;
+}
+.skills-pills-container:not(.hidden) .inner-skill:nth-child(3n) {
+    transition-delay: 0.06s;
+}
+.skills-pills-container:not(.hidden) .inner-skill:nth-child(4n) {
+    transition-delay: 0.09s;
 }
 
 
@@ -415,10 +428,9 @@ button.category-btn.active .category-icon {
     padding: 5px 12px;
     border-radius: var(--pill-radius);
 }
-/* Mini tags need a dark mode adjust too */
 body.dark-mode .mini-tag {
     background-color: rgba(74, 144, 226, 0.2);
-    color: #64B5F6; /* Slightly lighter blue for contrast against dark */
+    color: #64B5F6; 
 }
 
 
