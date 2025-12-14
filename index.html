@@ -182,15 +182,38 @@
 
 
     <script>
+        // --- SOUND EFFECT SETUP ---
+        const clickSound = new Audio('audios/click.mp3');
+        clickSound.volume = 0.4; 
+        
+        // Force preload to ensure it's ready
+        clickSound.preload = 'auto';
+
+        // Optional: If it still feels slow, uncomment the line below to speed up the sound file itself
+        // clickSound.playbackRate = 1.2; 
+
+        function playClick() {
+            // FIX LATENCY: This skips the first 0.02 seconds of the audio file
+            // where silence usually lives in mp3s.
+            clickSound.currentTime = 0.05; 
+            
+            clickSound.play().catch(e => {
+                console.log("Audio play failed (usually due to browser policy): ", e); 
+            });
+        }
+
+
         // --- SKILLS TOGGLE LOGIC ---
         const categoryButtons = document.querySelectorAll('.category-btn');
         categoryButtons.forEach(button => {
             button.addEventListener('click', () => {
+                playClick();
                 button.classList.toggle('active');
                 const contentContainer = button.nextElementSibling;
                 contentContainer.classList.toggle('hidden');
             });
         });
+
 
         // --- DARK MODE TOGGLE LOGIC ---
         const themeToggleBtn = document.getElementById('theme-toggle');
@@ -198,7 +221,6 @@
         const sunIcon = document.querySelector('.sun-icon');
         const moonIcon = document.querySelector('.moon-icon');
 
-        // Check for saved user preference, if any, on load
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme === 'dark') {
             bodyElement.classList.add('dark-mode');
@@ -207,19 +229,25 @@
         }
 
         themeToggleBtn.addEventListener('click', () => {
-            // Toggle dark mode class on body
+            playClick();
             bodyElement.classList.toggle('dark-mode');
-
-            // Toggle icons
             sunIcon.classList.toggle('hidden');
             moonIcon.classList.toggle('hidden');
 
-            // Save preference to local storage
             let theme = 'light';
             if (bodyElement.classList.contains('dark-mode')) {
                 theme = 'dark';
             }
             localStorage.setItem('theme', theme);
+        });
+
+
+        // --- GENERAL LINKS LOGIC ---
+        const allLinks = document.querySelectorAll('a');
+        allLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                playClick();
+            });
         });
     </script>
 
