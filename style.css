@@ -67,7 +67,8 @@ a:hover,
 .card-image-link:hover,
 button.category-btn:hover,
 #theme-toggle:hover,
-#sound-toggle:hover {
+#sound-toggle:hover,
+.mobile-menu-btn:hover {
     cursor: url('images/23176.png') 0 0, pointer;
 }
 
@@ -121,6 +122,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* Necessary for mobile menu positioning */
 }
 
 .logo {
@@ -132,6 +134,13 @@ header {
 nav {
     display: flex;
     gap: 15px; 
+    align-items: center;
+}
+
+/* Container for the items we want to hide on mobile */
+.nav-elements {
+    display: flex;
+    gap: 15px;
     align-items: center;
 }
 
@@ -180,8 +189,6 @@ body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg); }
 /* --- Sound Icon Animation --- */
 .sound-on-icon { opacity: 1; transform: scale(1); }
 .sound-off-icon { opacity: 0; transform: scale(0.5); }
-
-/* When we add the class 'muted' to the body or button, swap them */
 body.muted .sound-on-icon { opacity: 0; transform: scale(0.5); }
 body.muted .sound-off-icon { opacity: 1; transform: scale(1); }
 
@@ -199,6 +206,36 @@ body.muted .sound-off-icon { opacity: 1; transform: scale(1); }
 .pill-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+}
+
+/* ================= MOBILE MENU BUTTON (HIDDEN ON DESKTOP) ================= */
+.mobile-menu-btn {
+    display: none; /* Hide by default */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.mobile-menu-btn .bar {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background-color: var(--text-primary);
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+/* Animated Hamburger Icon State */
+.mobile-menu-btn.active .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.mobile-menu-btn.active .bar:nth-child(2) {
+    opacity: 0;
+}
+.mobile-menu-btn.active .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 
@@ -352,14 +389,10 @@ button.category-btn.active .category-icon {
     gap: 30px;
 }
 
-/* --- THE FIX IS HERE --- */
-/* Using .project-card.card makes this rule strong enough to override the default card margin */
 .project-card.card {
     padding: 0; 
     overflow: hidden; 
     transition: transform 0.3s ease;
-    
-    /* Remove the default card margin so the grid gap handles spacing */
     margin-bottom: 0; 
 }
 
@@ -474,19 +507,51 @@ footer p {
 }
 
 
-/* ================= RESPONSIVE TWEAKS ================= */
+/* ================= RESPONSIVE TWEAKS & MOBILE MENU ================= */
 @media (max-width: 768px) {
     body {
         padding: 10px; 
-    }
-    .header-container {
-        flex-direction: column;
-        gap: 15px;
     }
     .grid-container {
         grid-template-columns: 1fr;
     }
     .card {
         padding: 25px; 
+    }
+    
+    /* Show Hamburger Button on Mobile */
+    .mobile-menu-btn {
+        display: block;
+        z-index: 101; /* Ensure it stays above the drop down */
+        position: relative;
+    }
+
+    /* Hide the Navigation Elements by default on mobile */
+    .nav-elements {
+        position: absolute;
+        top: 60px; /* Adjust based on header height */
+        right: 0;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-light);
+        border-radius: var(--card-radius);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+        width: 150px;
+        
+        /* Hiding mechanics */
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    /* Active State: Show the menu */
+    .nav-elements.active {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
     }
 }
