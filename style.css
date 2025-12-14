@@ -451,7 +451,10 @@ button.category-btn.active .category-icon {
 
 .data-tags {
     display: flex;
+    flex-wrap: wrap; /* THIS IS THE KEY FIX: Allow tags to wrap to a new line */
     gap: 10px;
+    /* Optional: Adds a little space between rows when they do wrap */
+    margin-top: 5px; 
 }
 
 .mini-tag {
