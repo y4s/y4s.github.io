@@ -61,11 +61,13 @@ body {
 }
 
 /* ================= HOVER CURSOR SETTINGS ================= */
+/* Apply hover cursor to links, buttons, and our toggle buttons */
 a:hover, 
 .pill-btn:hover, 
 .card-image-link:hover,
 button.category-btn:hover,
-#theme-toggle:hover {
+#theme-toggle:hover,
+#sound-toggle:hover {
     cursor: url('images/23176.png') 0 0, pointer;
 }
 
@@ -129,7 +131,7 @@ header {
 
 nav {
     display: flex;
-    gap: 25px;
+    gap: 15px; /* Reduced slightly to fit extra button */
     align-items: center;
 }
 
@@ -142,8 +144,9 @@ nav {
     color: var(--accent-blue);
 }
 
-/* --- THEME TOGGLE BUTTON & ANIMATION --- */
-#theme-toggle {
+/* --- TOGGLE BUTTONS (Theme & Sound) --- */
+/* We group these so they look identical */
+#theme-toggle, #sound-toggle {
     background: none;
     border: none;
     cursor: pointer;
@@ -151,28 +154,39 @@ nav {
     padding: 8px;
     border-radius: 50%;
     transition: color 0.3s ease, background-color 0.3s ease;
+    
+    /* Grid layout allows stacking icons on top of each other */
     display: grid;
     place-items: center;
     grid-template-areas: "icon-stack";
     overflow: hidden; 
 }
 
-#theme-toggle:hover {
+#theme-toggle:hover, #sound-toggle:hover {
     color: var(--accent-blue);
     background-color: var(--bg-hero);
 }
 
-#theme-toggle .icon {
+/* Stack the icons */
+#theme-toggle .icon, #sound-toggle .icon {
     grid-area: icon-stack;
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
 }
 
-/* Light/Dark Icon States */
+/* --- Theme Icon Animation --- */
 .sun-icon { opacity: 1; transform: rotate(0deg); }
 .moon-icon { opacity: 0; transform: rotate(-90deg); }
-
 body.dark-mode .sun-icon { opacity: 0; transform: rotate(90deg); }
 body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg); }
+
+/* --- Sound Icon Animation --- */
+/* Simple fade/scale scale for sound */
+.sound-on-icon { opacity: 1; transform: scale(1); }
+.sound-off-icon { opacity: 0; transform: scale(0.5); }
+
+/* When we add the class 'muted' to the body or button, swap them */
+body.muted .sound-on-icon { opacity: 0; transform: scale(0.5); }
+body.muted .sound-off-icon { opacity: 1; transform: scale(1); }
 
 
 .pill-btn {
@@ -206,15 +220,14 @@ body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg); }
     color: var(--text-primary);
 }
 
+/* Updated max-width to 100% per your request */
 .hero-subtext {
     font-size: 1.1rem;
     color: var(--text-primary);
-    
-    /* CHANGED: This was 700px. Setting it to 100% removes the empty space on the right. */
     max-width: 100%; 
-    
     line-height: 1.7;
 }
+
 
 /* ================= SKILLS SECTION ================= */
 .skills-section {
@@ -225,8 +238,6 @@ body.dark-mode .moon-icon { opacity: 1; transform: rotate(0deg); }
 .skills-horizontal-wrapper {
     display: flex;
     flex-wrap: wrap; 
-    /* CHANGED: Removed gap to fix the ghost spacing issue. 
-       We will use margins on the children instead. */
     gap: 0; 
     align-items: center; 
     padding-bottom: 10px; 
@@ -254,7 +265,6 @@ button.category-btn {
     gap: 8px;
     white-space: nowrap;
     z-index: 2;
-    /* CHANGED: Margins replace the gap. */
     margin-right: 10px;
     margin-bottom: 12px;
 }
@@ -277,15 +287,14 @@ button.category-btn.active .category-icon {
 }
 
 
-/* --- THE NEW SMOOTH SLIDE ANIMATION LOGIC --- */
+/* --- SLIDING ANIMATION LOGIC --- */
 
 .skills-pills-container {
     display: contents;
 }
 
-/* The Inner Skill Item (This handles the animation) */
+/* The Inner Skill Item */
 .inner-skill {
-    /* Base styles */
     font-weight: 600;
     font-size: 0.85rem;
     color: var(--text-primary);
@@ -300,39 +309,31 @@ button.category-btn.active .category-icon {
     padding: 5px 12px;
     opacity: 1;
     transform: translateX(0);
-    
-    /* CHANGED: Added margin here so we can animate it to 0 */
     margin-right: 8px;
     margin-bottom: 12px;
     
-    /* The Magic Transition: Handles both opening and closing.
-       CHANGED: Removed cubic-bezier, switched to standard 'ease' for a cleaner look. */
     transition: 
         max-width 0.35s ease, 
         padding 0.35s ease, 
-        margin 0.35s ease, /* Animating margin kills the ghost space */
+        margin 0.35s ease, 
         opacity 0.35s ease, 
         transform 0.35s ease,
         border-width 0.2s ease;
 }
 
-/* The Hidden State (Squash it to zero) */
+/* The Hidden State */
 .skills-pills-container.hidden .inner-skill {
     max-width: 0;
     padding: 0;
     border-width: 0;
     opacity: 0;
-    /* Slide to the LEFT (-15px) when hiding */
     transform: translateX(-15px);
     overflow: hidden; 
-    
-    /* CHANGED: Collapse margins to 0. This fixes the random spaces! */
     margin-right: 0;
     margin-bottom: 0;
 }
 
 /* Staggered Delays (OPENING ONLY) */
-/* This makes them slide in one by one */
 .skills-pills-container:not(.hidden) .inner-skill:nth-child(2n) {
     transition-delay: 0.03s;
 }

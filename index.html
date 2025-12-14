@@ -23,8 +23,13 @@
                 <a href="#work" class="nav-link">Work</a>
                 <a href="mailto:contact@jason.mom" class="nav-btn pill-btn">Contact</a>
                 
+                <button id="sound-toggle" aria-label="Toggle Sound">
+                    <svg class="sound-on-icon icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    <svg class="sound-off-icon icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                </button>
+
                 <button id="theme-toggle" aria-label="Toggle Dark Mode">
-                    <svg class="sun-icon icon hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="sun-icon icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                     <svg class="moon-icon icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 </button>
             </nav>
@@ -176,7 +181,7 @@
             <a href="http://github.com/y4s">GitHub</a> / <a href="https://linkedin.com/">LinkedIn</a>
         </div>
         <div class="copyright">
-            Copyright © 2025 @yeson | Hosted on GitHub Pages
+            Copyright © 2025 @yeson | jason.mom
         </div>
     </footer>
 
@@ -185,20 +190,44 @@
         // --- SOUND EFFECT SETUP ---
         const clickSound = new Audio('audios/click.mp3');
         clickSound.volume = 0.4; 
-        
-        // Force preload to ensure it's ready
         clickSound.preload = 'auto';
 
-        // Optional: If it still feels slow, uncomment the line below to speed up the sound file itself
-        // clickSound.playbackRate = 1.2; 
+        // Variable to track sound state (defaults to false/unmuted)
+        let isMuted = localStorage.getItem('isMuted') === 'true';
+
+        // Apply initial muted state logic
+        const soundToggleBtn = document.getElementById('sound-toggle');
+        const body = document.body;
+
+        if (isMuted) {
+            body.classList.add('muted');
+        }
 
         function playClick() {
-            clickSound.currentTime = 0.1; 
-            
-            clickSound.play().catch(e => {
-                console.log("Audio play failed (usually due to browser policy): ", e); 
-            });
+            // Only play if NOT muted
+            if (!isMuted) {
+                clickSound.currentTime = 0.02; 
+                clickSound.play().catch(e => {
+                    console.log("Audio play failed: ", e); 
+                });
+            }
         }
+
+        // --- SOUND TOGGLE LOGIC ---
+        soundToggleBtn.addEventListener('click', () => {
+            isMuted = !isMuted; // Toggle variable
+            
+            // Toggle visual class
+            if (isMuted) {
+                body.classList.add('muted');
+            } else {
+                body.classList.remove('muted');
+                playClick(); // Play a sound to confirm unmuting
+            }
+
+            // Save to storage
+            localStorage.setItem('isMuted', isMuted);
+        });
 
 
         // --- SKILLS TOGGLE LOGIC ---
@@ -215,25 +244,26 @@
 
         // --- DARK MODE TOGGLE LOGIC ---
         const themeToggleBtn = document.getElementById('theme-toggle');
-        const bodyElement = document.body;
+        // We already have bodyElement defined as 'body' above, reused here
         const sunIcon = document.querySelector('.sun-icon');
         const moonIcon = document.querySelector('.moon-icon');
 
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme === 'dark') {
-            bodyElement.classList.add('dark-mode');
+            body.classList.add('dark-mode');
             sunIcon.classList.remove('hidden');
             moonIcon.classList.add('hidden');
         }
 
         themeToggleBtn.addEventListener('click', () => {
             playClick();
-            bodyElement.classList.toggle('dark-mode');
-            sunIcon.classList.toggle('hidden');
-            moonIcon.classList.toggle('hidden');
-
+            body.classList.toggle('dark-mode');
+            
+            // Note: Icon visibility is now handled by CSS based on body class, 
+            // but we keep this variable update for clarity if needed.
+            
             let theme = 'light';
-            if (bodyElement.classList.contains('dark-mode')) {
+            if (body.classList.contains('dark-mode')) {
                 theme = 'dark';
             }
             localStorage.setItem('theme', theme);
