@@ -557,4 +557,36 @@ footer p {
         transform: translateY(0);
         pointer-events: all;
     }
+    
+    /* ================= FORCE FOOTER SPACING ================= */
+
+    /* 1. Reset the container */
+    .footer-links {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 60px !important; /* This is a large gap (60px). You will definitely see this. */
+        margin-bottom: 20px !important;
+    }
+
+    /* 2. Reset the links */
+    .footer-links a {
+        margin: 0 !important; /* Remove margins so they don't fight the gap */
+        padding: 0 !important;
+        color: var(--text-secondary);
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    /* 3. Style the Icon */
+    .footer-icon {
+        width: 30px !important; /* Made them slightly bigger too */
+        height: 30px !important;
+        /* No fill needed here because we used fill="currentColor" in HTML */
+    }
+
+    /* 4. Hover Effect */
+    .footer-links a:hover {
+        color: var(--accent-blue) !important;
+        transform: translateY(-5px) !important;
+    }
 }
