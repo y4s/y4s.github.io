@@ -51,7 +51,7 @@ html {
 body {
     margin: 0;
     /* Main Cursor Path */
-    cursor: url('images/23165.png') 0 0, auto;
+    cursor: url('images/pointer.png') 0 0, auto;
     background-color: var(--bg-page);
     color: var(--text-primary);
     font-family: var(--font-stack);
@@ -69,7 +69,7 @@ button.category-btn:hover,
 #theme-toggle:hover,
 #sound-toggle:hover,
 .mobile-menu-btn:hover {
-    cursor: url('images/23176.png') 0 0, pointer;
+    cursor: url('images/hover.png') 0 0, pointer;
 }
 
 
