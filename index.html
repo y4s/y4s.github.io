@@ -242,10 +242,15 @@
         clickSound.volume = 0.4; 
         clickSound.preload = 'auto';
 
-        // 2. NEW: Mode Switch Sound
+        // 2. Mode Switch Sound
         const modeSound = new Audio('audios/mode.mp3');
         modeSound.volume = 0.4;
         modeSound.preload = 'auto';
+
+        // 3. Hover Sound (NEW)
+        const hoverSound = new Audio('audios/hover.mp3');
+        hoverSound.volume = 0.2; // Slightly quieter for subtlety
+        hoverSound.preload = 'auto';
 
         let isMuted = localStorage.getItem('isMuted') === 'true';
 
@@ -264,9 +269,8 @@
 
 
         // --- HELPER: UPDATE ICONS ---
-        // Keeps icons in sync using JavaScript class toggling
         function updateIcons() {
-            // Sound
+            // Sound Icons
             if (isMuted) {
                 soundOnIcon.classList.add('hidden');
                 soundOffIcon.classList.remove('hidden');
@@ -274,7 +278,7 @@
                 soundOnIcon.classList.remove('hidden');
                 soundOffIcon.classList.add('hidden');
             }
-            // Theme
+            // Theme Icons
             if (body.classList.contains('dark-mode')) {
                 sunIcon.classList.remove('hidden');
                 moonIcon.classList.add('hidden');
@@ -294,26 +298,35 @@
             body.classList.add('dark-mode');
         }
         
-        // Ensure icons are correct on load
         updateIcons();
 
 
         // --- AUDIO PLAY FUNCTIONS ---
+        
+        // 1. Click
         function playClick() {
             if (!isMuted) {
                 clickSound.currentTime = 0.02; 
-                clickSound.play().catch(e => {
-                    console.log("Audio play failed: ", e); 
-                });
+                clickSound.play().catch(e => console.log("Audio error:", e));
             }
         }
 
-        // Specific function for Mode Toggle
+        // 2. Mode Switch
         function playModeSound() {
             if (!isMuted) {
                 modeSound.currentTime = 0; 
-                modeSound.play().catch(e => {
-                    console.log("Audio play failed: ", e); 
+                modeSound.play().catch(e => console.log("Audio error:", e));
+            }
+        }
+
+        // 3. Hover (With Desktop Check)
+        function playHoverSound() {
+            // Only play if not muted AND user has a hover-capable device (mouse/trackpad)
+            // This effectively disables it for touch screens / mobile
+            if (!isMuted && window.matchMedia('(hover: hover)').matches) {
+                hoverSound.currentTime = 0; // Reset to start for rapid hovers
+                hoverSound.play().catch(e => {
+                    // Ignored (browsers block auto-play sometimes, this prevents errors)
                 });
             }
         }
@@ -339,7 +352,6 @@
         // Sound Toggle
         soundToggleBtn.addEventListener('click', () => {
             isMuted = !isMuted; 
-            
             if (isMuted) {
                 body.classList.add('muted');
             } else {
@@ -350,8 +362,7 @@
             updateIcons();
         });
 
-
-        // SKILLS TOGGLE
+        // Skills Toggle
         const categoryButtons = document.querySelectorAll('.category-btn');
         categoryButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -362,14 +373,10 @@
             });
         });
 
-
-        // DARK MODE TOGGLE (UPDATED)
+        // Dark Mode Toggle
         themeToggleBtn.addEventListener('click', () => {
-            // Play the unique mode sound
             playModeSound();
-            
             body.classList.toggle('dark-mode');
-            
             let theme = 'light';
             if (body.classList.contains('dark-mode')) {
                 theme = 'dark';
@@ -378,8 +385,7 @@
             updateIcons();
         });
 
-
-        // GENERAL LINKS
+        // General Links (Click Sound)
         const allLinks = document.querySelectorAll('a');
         allLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -390,6 +396,17 @@
                 playClick();
             });
         });
+
+        // --- GLOBAL HOVER SOUND SETUP ---
+        // Select all interactive elements: Links and Buttons
+        const interactiveElements = document.querySelectorAll('a, button');
+        
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                playHoverSound();
+            });
+        });
+
     </script>
 
 </body>
