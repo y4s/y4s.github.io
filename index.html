@@ -193,9 +193,7 @@
         // clickSound.playbackRate = 1.2; 
 
         function playClick() {
-            // FIX LATENCY: This skips the first 0.02 seconds of the audio file
-            // where silence usually lives in mp3s.
-            clickSound.currentTime = 0.05; 
+            clickSound.currentTime = 0.26; 
             
             clickSound.play().catch(e => {
                 console.log("Audio play failed (usually due to browser policy): ", e); 
